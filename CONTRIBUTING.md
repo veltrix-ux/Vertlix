@@ -5,7 +5,7 @@ Thanks for helping improve the Vertlix website.
 ## Set up
 
 ```sh
-git clone https://github.com/YOUR-USERNAME/vertlix.git
+git clone https://github.com/vertlix-ux/vertlix.git
 cd vertlix
 npm run dev      # serves the site at http://localhost:3000
 ```

@@ -399,10 +399,10 @@ function join(e){e.preventDefault();var f=e.target,inp=document.getElementById('
 if(f.querySelector('[name=_honey]').value)return false;
 out.style.color='';out.textContent='Joining...';b.disabled=true;
 try{var l=JSON.parse(localStorage.getItem('vx')||'[]');l.push(v);localStorage.setItem('vx',JSON.stringify(l))}catch(x){}
-fetch('https://formsubmit.co/ajax/2011uvindudewsara@gmail.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({email:v,_subject:'New Vertlix waitlist signup',_template:'table',_captcha:'false',message:'New waitlist signup: '+v})})
+fetch('https://formsubmit.co/ajax/2011uvindudewsara@gmail.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({email:v,_subject:'New Vertlix waitlist signup',_template:'table',_captcha:'false',_replyto:v,_autoresponse:'Thanks for joining the Vertlix waitlist. Early access opens in 2027 and we will email you as soon as it does. You can reply to this email any time.',message:'New waitlist signup: '+v})})
 .then(function(r){if(!r.ok)throw 0;return r.json()})
 .then(function(){out.textContent="You're on the list. We'll email "+v+" when early access opens.";f.reset()})
-.catch(function(){out.style.color='#e30613';out.textContent="Couldn't join right now. Please try again in a moment."})
+.catch(function(){out.style.color='#e6e6e6';out.textContent="We couldn't reach the signup service from here. ";var a=document.createElement('a');a.href='mailto:2011uvindudewsara@gmail.com?subject='+encodeURIComponent('Vertlix waitlist')+'&body='+encodeURIComponent('Please add me to the Vertlix waitlist: '+v);a.target='_blank';a.rel='noopener';a.textContent='Email us to join instead';a.style.cssText='color:#fff;font-weight:700';out.appendChild(a)})
 .then(function(){b.disabled=false});return false}
 </script>
 <script>

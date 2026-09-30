@@ -373,7 +373,26 @@ body.lock{overflow:hidden}
 .dm-ch{background:transparent;color:#a3a3a3;border:1px solid #333;padding:5px 11px;font:12px "Inter",Arial,sans-serif;cursor:pointer}.dm-ch.on{background:#fff;color:#000;border-color:#fff}
 .dm-lg{display:flex;align-items:center;gap:0;padding:9px 0;border-bottom:1px solid #222;font-size:13px}.dm-t{color:#6e6e73;width:76px;flex:none;font-size:12px}
 @media(max-width:700px){.app{height:600px}.dm-br{grid-template-columns:1fr 1fr}.dm-br .bar{grid-column:1/-1;order:3}.dm-g{grid-template-columns:1fr}.app main{padding:18px 16px}}
-</style>
+
+.dm-org{overflow-x:auto;padding:2px 0 12px;margin-bottom:4px}
+.tr,.tr ul{list-style:none;margin:0;padding:0;display:flex;justify-content:center;position:relative}
+.tr{width:max-content;min-width:100%}
+.tr ul{padding-top:22px}
+.tr ul:before{content:"";position:absolute;top:0;left:50%;height:22px;border-left:1px solid #5a5a5f}
+.tr li{list-style:none;position:relative;display:flex;flex-direction:column;align-items:center;padding:22px 8px 0}
+.tr>li{padding-top:0}
+.tr li:before,.tr li:after{content:"";position:absolute;top:0;right:50%;width:50%;height:22px;border-top:1px solid #5a5a5f}
+.tr li:after{right:auto;left:50%;border-left:1px solid #5a5a5f}
+.tr>li:before,.tr>li:after,.tr li:only-child:before,.tr li:only-child:after{display:none}
+.tr li:only-child{padding-top:22px}.tr>li:only-child{padding-top:0}
+.tr li:first-child:before,.tr li:last-child:after{border:0}
+.tr li:last-child:before{border-right:1px solid #5a5a5f}
+.tr .dm-n{flex-direction:column;align-items:center;text-align:center;gap:3px;width:auto;min-width:138px;max-width:170px;padding:10px 14px;background:#1a1a1c;border:1px solid #38383c}
+.tr .dm-n b{display:flex;align-items:center;font-size:13px}.tr .dm-n .dd{margin-right:7px}
+.tr .dm-n small{white-space:normal;line-height:1.3;font-size:11px}
+.tr .dm-n:hover{border-color:#fff;background:#222225}
+@media(max-width:700px){.tr .dm-n{min-width:118px;padding:8px 10px}.tr li{padding-left:5px;padding-right:5px}}
+.dm-sw{display:none;color:#6e6e73;font-size:12px;text-align:center}@media(max-width:900px){.dm-sw{display:block}}</style>
 </head>
 <body>
 <nav><div class="w"><a class="logo" href="#"><i></i>Vertlix</a>
@@ -544,10 +563,10 @@ function dot(a){return '<b class="dd" style="background:'+a.c+'"></b>'}
 function opts(list,sel){return list.map(function(a){return '<option value="'+a.id+'"'+(a.id===sel?' selected':'')+'>'+E(a.name)+'</option>'}).join('')}
 function vGoals(){var l=S.goals.map(function(g,i){var a=ag(g.o),d=g.pr>=100;return '<div class="dm-c"><b>'+E(g.t)+'</b><div class="dm-m">Owner: '+E(a.name)+' · Budget: $'+g.b+' / month</div><div class="bar"><i style="width:'+g.pr+'%"></i></div><div class="dm-r sb"><span class="'+(d?'ok':'')+'">'+(d?'✓ Done':g.pr+'% complete')+'</span>'+(d?'':'<button class="dm-b g sm" data-act="adv" data-i="'+i+'">+10% progress</button>')+'</div></div>'}).join('');
 return '<div class="h">Goals</div><div class="dm-f"><input id="dmgt" maxlength="80" placeholder="e.g. Launch the beta in 30 days" aria-label="Goal"><select id="dmgo" aria-label="Owner">'+opts(S.agents,'v')+'</select><input id="dmgb" type="number" min="10" step="10" value="100" aria-label="Monthly budget in dollars" style="width:90px"><button class="dm-b" data-act="goal">Create goal</button></div>'+l}
-function node(a,sm){return '<button class="dm-n'+(sm?' sm':'')+(a.p?' pz':'')+'" data-act="sel" data-id="'+a.id+'">'+dot(a)+'<span><b>'+E(a.name)+'</b><small>'+E(a.role)+' · '+E(a.model)+(a.p?' · Paused':'')+'</small></span></button>'}
-function vOrg(){var cols=S.agents.filter(function(a){return a.par==='v'}).map(function(l){var k=S.agents.filter(function(a){return a.par===l.id}).map(function(x){return node(x,1)}).join('');return '<div class="dm-col">'+node(l)+(k?'<div class="dm-kids">'+k+'</div>':'')+'</div>'}).join('');
-var who=S.agents.filter(function(a){return a.par==='v'||a.id==='v'});
-return '<div class="h">Org chart</div><div class="dm-org"><div class="dm-top">'+node(ag('v'))+'</div><div class="dm-cols">'+cols+'</div></div><div class="dm-f" style="margin-top:18px"><select id="dmhl" aria-label="Who is hiring">'+opts(who,'e')+'</select><input id="dmhr" maxlength="30" placeholder="Role to hire, e.g. Support agent" aria-label="Role"><button class="dm-b" data-act="hire">Request hire</button></div>'}
+function node(a){return '<button class="dm-n'+(a.p?' pz':'')+'" data-act="sel" data-id="'+a.id+'"><b>'+dot(a)+E(a.name)+'</b><small>'+E(a.role)+' · '+E(a.model)+(a.p?' · Paused':'')+'</small></button>'}
+function kids(pid){var k=S.agents.filter(function(a){return a.par===pid});return k.length?'<ul>'+k.map(function(a){return '<li>'+node(a)+kids(a.id)+'</li>'}).join('')+'</ul>':''}
+function vOrg(){var who=S.agents.filter(function(a){return a.par==='v'||a.id==='v'});
+return '<div class="h">Org chart</div><div class="dm-org" tabindex="0" aria-label="Org chart, scrolls sideways"><ul class="tr"><li>'+node(ag('v'))+kids('v')+'</li></ul></div><div class="dm-sw">Swipe sideways to see the whole chart.</div><div class="dm-f" style="margin-top:10px"><select id="dmhl" aria-label="Who is hiring">'+opts(who,'e')+'</select><input id="dmhr" maxlength="30" placeholder="Role to hire, e.g. Support agent" aria-label="Role"><button class="dm-b" data-act="hire">Request hire</button></div>'}
 function vInbox(){var l=S.reqs.map(function(r){return '<div class="dm-c"><b>'+E(r.title)+'</b><p>Reason: '+E(r.why)+' '+E(r.cost)+'</p><div class="st2">Waiting for approval</div><div class="dm-r"><button class="dm-b" data-act="ok" data-id="'+r.id+'">Approve</button><button class="dm-b g" data-act="no" data-id="'+r.id+'">Reject</button></div></div>'}).join('')||'<div class="dm-e">Inbox zero. Nothing is waiting for you.</div>';
 return '<div class="h">Inbox <span class="live">'+S.reqs.length+' waiting</span></div>'+l+'<div class="dm-r"><button class="dm-b g sm" data-act="sim">Simulate a new request</button></div>'}
 function vCost(){var ts=0,tc=0,live=S.agents.filter(function(a){return!a.p}).length,w='';
@@ -560,7 +579,7 @@ return '<div class="h">Activity</div><div class="dm-r" style="margin:-6px 0 12px
 function vAgent(){var a=ag(S.sel);if(!a){S.v='org';return vOrg()}var pc=Math.min(100,Math.round(a.sp/a.cap*100)),p=ag(a.par);
 return '<div class="h">'+dot(a)+E(a.name)+' <span class="pill '+(a.p?'pa':'ac')+'">'+(a.p?'Paused':'Active')+'</span></div><div class="dm-g"><div><small>Role</small>'+E(a.role)+'</div><div><small>Reports to</small>'+(p?E(p.name):'You')+'</div><div><small>Model</small><select data-act="model" aria-label="Model">'+MODELS.map(function(m){return '<option'+(m===a.model?' selected':'')+'>'+m+'</option>'}).join('')+'</select></div><div><small>Spend this month</small>$'+a.sp+' of $'+a.cap+'</div></div><div class="bar" style="margin:14px 0"><i style="width:'+pc+'%"></i></div><div class="dm-m">Current task: <b style="color:#fff">'+E(a.task)+'</b></div><div class="dm-f"><input id="dmt" maxlength="60" placeholder="Assign a new task" aria-label="Task"><button class="dm-b" data-act="task">Assign task</button><button class="dm-b g" data-act="tg" data-id="'+a.id+'">'+(a.p?'Resume agent':'Pause agent')+'</button></div>'}
 function render(){var V={goals:vGoals,org:vOrg,inbox:vInbox,cost:vCost,log:vLog,agent:vAgent},h=V[S.v](),m=document.getElementById('dmm');
-m.innerHTML=(S.m?'<div class="dn2" role="status">'+E(S.m)+'</div>':'')+h;S.m='';
+m.innerHTML=(S.m?'<div class="dn2" role="status">'+E(S.m)+'</div>':'')+h;S.m='';var og=m.querySelector('.dm-org');if(og)og.scrollLeft=(og.scrollWidth-og.clientWidth)/2;
 document.getElementById('dmh').innerHTML='<b>Try it:</b> '+E(HINT[S.v]);
 document.querySelectorAll('#dmn li').forEach(function(l){l.classList.toggle('on',l.dataset.v===S.v)});
 document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.v===S.v)});
